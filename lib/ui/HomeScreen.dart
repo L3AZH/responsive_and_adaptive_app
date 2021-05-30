@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:responsive_and_adaptive_app/ui/widget/ChartWeekly.dart';
 
+import 'widget/AddTransactionModalBottomSheet.dart';
+
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,13 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          showModalBottomSheet<void>(
+              context: context,
+              builder: (BuildContext context){
+                return AddTransactionModalBottomSheet();
+              });
+        },
         backgroundColor: Colors.orangeAccent,
         child: Icon(
           Icons.add,
