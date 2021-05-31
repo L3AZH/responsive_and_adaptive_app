@@ -31,6 +31,7 @@ class ItemInChart extends StatelessWidget{
                   width: (constraint.maxWidth)*0.4,
                   height: constraint.maxHeight*0.5,
                   decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black),
                     color: Colors.purple.withOpacity(0.1),
                     borderRadius: BorderRadius.all(Radius.circular(10)),
                   ),

@@ -6,4 +6,6 @@ class Repository {
       AppDatabase.instance.addTransaction(trans);
   Future<int> deleteTransaction(TransactionInfo trans) =>
       AppDatabase.instance.deleteTransaction(trans);
+  Future<List<TransactionInfo>> getListTransaction() =>
+      AppDatabase.instance.getListTransaction();
 }

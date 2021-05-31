@@ -1,6 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:responsive_and_adaptive_app/db/model/Transaction.dart';
 import 'package:responsive_and_adaptive_app/ui/widget/DatePickElevateButton.dart';
+import 'package:responsive_and_adaptive_app/viewmodel/HomeProvider.dart';
 
 class AddTransactionModalBottomSheet extends StatefulWidget {
   @override
@@ -10,28 +14,26 @@ class AddTransactionModalBottomSheet extends StatefulWidget {
 
 class _AddTransactionModalBottomSheet
     extends State<AddTransactionModalBottomSheet> {
-
-
   final _titleTextFormField = CustomTextFormField(
     hint: "Title",
     icon: Icons.label,
+    isNumberText: false,
   );
 
   final _amountTextFormField = CustomTextFormField(
     hint: "Amount",
     icon: Icons.money,
+    isNumberText: true,
   );
 
   @override
   Widget build(BuildContext context) {
-    final _size = MediaQuery
-        .of(context)
-        .size;
+    final _size = MediaQuery.of(context).size;
     return Container(
         width: _size.width,
         height: _size.height * 0.8,
         decoration:
-        BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(40))),
+            BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(40))),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,7 +58,7 @@ class _AddTransactionModalBottomSheet
                 /// r bien mat, text se bi clear khi nhap xong, tai sao ?
                 /// vi khi ta dung GlobalKey<FormState> va dung chung vs
                 /// StatelessWidget => khi t nhap du lieu vao state thay doi =>
-                /// widget se build lai => clear text, khi t khoi t 1 bien roi 
+                /// widget se build lai => clear text, khi t khoi t 1 bien roi
                 /// ms dung => GlobalKey<FormState> se khong dc tao moi ms khi
                 /// build lai => state thay doi nhung van du nguyen dc du lieu cu
               ),
@@ -83,12 +85,27 @@ class _AddTransactionModalBottomSheet
                   Container(
                     margin: EdgeInsets.all(10),
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        if (_titleTextFormField.formKey.currentState!
+                                .validate() &&
+                            _amountTextFormField.formKey.currentState!
+                                .validate()) {
+                          final homeProvider =
+                              Provider.of<HomeProvider>(context, listen: false);
+                          homeProvider.addTrans(TransactionInfo(
+                              description:
+                                  _titleTextFormField.textEditController.text,
+                              amount: double.parse(
+                                  _amountTextFormField.textEditController.text),
+                              timeStamp: homeProvider
+                                  .timePick.millisecondsSinceEpoch));
+                          Navigator.of(context).pop();
+                        }
+                      },
                       child: Text("Save"),
                       style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              Colors.purple)
-                      ),
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.purple)),
                     ),
                   )
                 ],
@@ -102,10 +119,12 @@ class _AddTransactionModalBottomSheet
 class CustomTextFormField extends StatelessWidget {
   String? _hint;
   IconData? _iconData;
+  bool? isNumberText = false;
 
-  CustomTextFormField({String? hint, IconData? icon}) {
+  CustomTextFormField({String? hint, IconData? icon, bool? isNumberText}) {
     this._hint = hint;
     this._iconData = icon;
+    this.isNumberText = isNumberText;
   }
 
   final TextEditingController textEditController = TextEditingController();
@@ -127,7 +146,7 @@ class CustomTextFormField extends StatelessWidget {
                   borderSide: BorderSide(color: Colors.grey)),
               enabledBorder: OutlineInputBorder(
                   borderSide:
-                  BorderSide(color: Colors.purple.withOpacity(0.5))),
+                      BorderSide(color: Colors.purple.withOpacity(0.5))),
               focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: Colors.purple, width: 2)),
               prefixIcon: Icon(
@@ -135,6 +154,8 @@ class CustomTextFormField extends StatelessWidget {
                 color: Colors.purple,
               ),
             ),
+            keyboardType:
+                this.isNumberText! ? TextInputType.number : TextInputType.text,
             style: TextStyle(color: Colors.purple),
             controller: this.textEditController,
             validator: (value) {

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:responsive_and_adaptive_app/viewmodel/HomeProvider.dart';
 
 class DatePickElevateBtn extends StatefulWidget {
   @override
@@ -40,7 +42,10 @@ class _DatePickElevateBtnState extends State<DatePickElevateBtn> {
       return;
     else {
       setState(() {
+        final homeProvider = Provider.of<HomeProvider>(context,listen: false);
+        homeProvider.timePick = newDate;
         this._text = "${newDate.day}/${newDate.month}/${newDate.year}";
+
       });
     }
   }

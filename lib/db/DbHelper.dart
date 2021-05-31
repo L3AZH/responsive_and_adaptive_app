@@ -31,6 +31,13 @@ class AppDatabase {
     )
     ''');
   }
+
+  Future<List<TransactionInfo>> getListTransaction() async{
+    final db = await instance.database;
+    final rs = await db.rawQuery("select * from $tableTransaction");
+    return rs.map((json) => TransactionInfo.fromJson(json)).toList();
+  }
+
   Future<TransactionInfo> addTransaction(TransactionInfo trans) async {
     final db = await instance.database;
     final newId = await db.insert(tableTransaction, trans.toJson());
