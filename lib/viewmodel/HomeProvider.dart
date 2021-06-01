@@ -7,12 +7,14 @@ class HomeProvider with ChangeNotifier {
 
   final _repository = Repository();
   List<TransactionInfo> listTrans = [];
+  List<Map<String,Object?>> listDataChart = [];
   DateTime timePick = DateTime.now();
 
   HomeProvider(){
     final logger = Logger();
     logger.i("this shit must run");
     getLisTrans();
+    getListDataChart();
   }
 
   void getLisTrans() async{
@@ -28,6 +30,7 @@ class HomeProvider with ChangeNotifier {
     TransactionInfo tranNew = await _repository.addNewTransaction(transactionInfo);
     if(tranNew.id != null){
       getLisTrans();
+      getListDataChart();
     }
   }
 
@@ -35,7 +38,15 @@ class HomeProvider with ChangeNotifier {
     int result = await _repository.deleteTransaction(transactionInfo);
     if(result>0){
       getLisTrans();
+      getListDataChart();
     }
+  }
+
+  void getListDataChart() async{
+    final logger = Logger();
+    listDataChart = await _repository.getListTotalAmountWeekly();
+    logger.i(listDataChart);
+    notifyListeners();
   }
 
 

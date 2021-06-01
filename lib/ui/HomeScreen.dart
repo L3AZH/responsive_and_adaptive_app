@@ -28,13 +28,13 @@ class HomeScreen extends StatelessWidget {
                 margin: EdgeInsets.all(15),
                 width: _size.width,
                 height: _size.height * 0.3,
-                child: ChartWeekly(),
+                child: ChartWeekly(homeProvider),
               ),
               Column(
                 children: [
                   Container(
                     width: _size.width,
-                    height: _size.height * 0.5,
+                    height: _size.height * 0.7,
                     child: ListView.builder(
                         itemCount: homeProvider.listTrans.length,
                         itemBuilder: (BuildContext context, int index) {

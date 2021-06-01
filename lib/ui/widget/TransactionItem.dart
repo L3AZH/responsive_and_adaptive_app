@@ -29,7 +29,7 @@ class TransactionItem extends StatelessWidget {
           tranIndex!.description!,
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
         ),
-        subtitle: Text("${tranIndex!.timeStamp}"),
+        subtitle: Text("${DateTime.fromMicrosecondsSinceEpoch(tranIndex!.timeStamp!*1000)}"),
         trailing: IconButton(
           icon: Icon(Icons.delete, color: Colors.red),
           // onPressed: onIconButtonCLick!(), de v thi list se bi xoa het ngay tu luc khoi tao

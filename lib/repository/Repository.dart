@@ -8,4 +8,6 @@ class Repository {
       AppDatabase.instance.deleteTransaction(trans);
   Future<List<TransactionInfo>> getListTransaction() =>
       AppDatabase.instance.getListTransaction();
+  Future<List<Map<String,Object?>>> getListTotalAmountWeekly() =>
+      AppDatabase.instance.getDataOfChart();
 }
