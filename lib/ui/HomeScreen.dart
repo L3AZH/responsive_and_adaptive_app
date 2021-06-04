@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_and_adaptive_app/ui/widget/ChartWeekly.dart';
 import 'package:responsive_and_adaptive_app/ui/widget/TransactionItem.dart';
@@ -11,7 +12,9 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _size = MediaQuery.of(context).size;
-    final homeProvider = Provider.of<HomeProvider>(context);
+    //final homeProvider = Provider.of<HomeProvider>(context);
+    final logger = Logger();
+    logger.i("screen is rebuild");
     return Scaffold(
       appBar: AppBar(
         title: Text("Personal Expenses"),
@@ -28,24 +31,32 @@ class HomeScreen extends StatelessWidget {
                 margin: EdgeInsets.all(15),
                 width: _size.width,
                 height: _size.height * 0.3,
-                child: ChartWeekly(homeProvider),
+                child: Consumer<HomeProvider>(
+                  builder: (_,values,__){
+                    return ChartWeekly(values);
+                  },
+                ),
               ),
               Column(
                 children: [
                   Container(
                     width: _size.width,
                     height: _size.height * 0.7,
-                    child: ListView.builder(
-                        itemCount: homeProvider.listTrans.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return TransactionItem(
-                            tranIndex: homeProvider.listTrans.elementAt(index),
-                            onIconButtonCLick: () {
-                              homeProvider.deleteTrans(
-                                  homeProvider.listTrans.elementAt(index));
-                            },
-                          );
-                        }),
+                    child: Consumer<HomeProvider>(
+                      builder: (_,values,__){
+                        return ListView.builder(
+                            itemCount: values.listTrans.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return TransactionItem(
+                                tranIndex: values.listTrans.elementAt(index),
+                                onIconButtonCLick: () {
+                                  values.deleteTrans(
+                                      values.listTrans.elementAt(index));
+                                },
+                              );
+                            });
+                      },
+                    ),
                   )
                 ],
               ),
